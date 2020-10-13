@@ -1,3 +1,6 @@
+let customHeaders = new Headers();
+customHeaders.append('Accept', 'application/json');
+
 // _ = helper functions
 function _parseMillisecondsIntoReadableTime(timestamp) {
 	//Get hours from milliseconds
@@ -42,7 +45,18 @@ let showResult = queryResponse => {
 let getAPI = (lat, lon) => {
 	// Eerst bouwen we onze url op
 	// Met de fetch API proberen we de data op te halen.
-	// Als dat gelukt is, gaan we naar onze showResult functie.
+	// Als dat gelukt is, gaan we naar onze showResult functie
+	const endpoint = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=1c8944117c2359385783fcf4a114bc07&units=metric&lang=nl&cnt=1`
+	fetch(endpoint, {
+		headers : customHeaders
+	}).then(function (response) {
+		console.log(response.json());
+	}).then(function (json) {
+		console.log(json);
+		showResult(json);
+	}).catch(function(error) {
+		console.error('An error occured, we handled it.', error);
+	});
 };
 
 document.addEventListener('DOMContentLoaded', function() {
