@@ -12,9 +12,18 @@
     --color-dark: #0F3557;
     --color-front: var(--color-dark);
     --color-back: var(--color-light);
+
     /* opacity */
+    --global-muted-opacity: 0.6;
 
     /* transitions */
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-front: var(--color-light);
+        --color-back: var(--color-dark);
+    }
 }
 
 .is-night {
@@ -292,6 +301,10 @@ input::placeholder {
     max-width: 25em;
     padding: 2em;
     margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
 }
 
 .c-app__summary {
@@ -305,11 +318,15 @@ input::placeholder {
     Horizon with sun visualisation
 */
 
+.c-horizon {
+    margin-top: auto;
+}
+
 .c-horizon__sky-wrapper {
     position: relative;
     height: 200px;
     overflow: hidden;
-    padding: 0 40px 0 0;
+    padding: 24px 40px 0 0;
 }
 
 .c-horizon__sky {
@@ -324,12 +341,16 @@ input::placeholder {
     justify-content: center;
     align-items: center;
     width: 40px;
+    transform: translateY(22px);
 }
 
 .c-horizon__sun::before {
+    display: block;
+    text-align: center;
     content: attr(data-time);
     font-size: 12px;
     line-height: 16px;
+    margin-bottom: 8px;
 }
 
 .c-horizon__line {
@@ -341,8 +362,8 @@ input::placeholder {
 }
 
 .c-horizon__time {
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 12px;
+    line-height: 16px;
 }
 
 /*------------------------------------*\
