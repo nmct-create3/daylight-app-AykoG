@@ -11,10 +11,17 @@ function _parseMillisecondsIntoReadableTime(timestamp) {
   const minutes = "0" + date.getMinutes();
   // Seconds part from the timestamp (gebruiken we nu niet)
   // const seconds = '0' + date.getSeconds();
-
   // Will display time in 10:30(:23) format
   return hours.substr(-2) + ":" + minutes.substr(-2); //  + ':' + s
 }
+
+let itBeNight = () => {
+  document.querySelector("html").classList.add("is-night");
+};
+
+let itBeDay = () => {
+  document.querySelector("html").classList.remove("is-night");
+};
 
 // 5 TODO: maak updateSun functie
 const updateSun = (sunElement, left, bottom, now) => {
@@ -35,41 +42,39 @@ let placeSunAndStartMoving = (totalMinutes, sunrise) => {
     minutesLeft = document.querySelector(".js-time-left");
   // Bepaal het aantal minuten dat de zon al op is.
   const now = new Date(),
-	sunriseData = new Date(sunrise * 1000);
-	
+    sunriseData = new Date(sunrise * 1000);
   let minutesSunUp =
     now.getHours() * 60 +
     now.getMinutes() -
-	(sunriseData.getHours() * 60 + sunriseData.getMinutes());
-	
+    (sunriseData.getHours() * 60 + sunriseData.getMinutes());
   const percentage = (100 / totalMinutes) * minutesSunUp,
     sunLeft = percentage,
     sunBottom = percentage < 50 ? percentage * 2 : (100 - percentage) * 2; // korte if else, condition ? true : false;
-
   updateSun(sun, sunLeft, sunBottom, now);
   // Nu zetten we de zon op de initiële goede positie ( met de functie updateSun ). Bereken hiervoor hoeveel procent er van de totale zon-tijd al voorbij is.
   // We voegen ook de 'is-loaded' class toe aan de body-tag.
   // Vergeet niet om het resterende aantal minuten in te vullen.
   minutesLeft.innerText = totalMinutes - minutesSunUp;
   // Nu maken we een functie die de zon elke minuut zal updaten
-  const t = setInterval(() => {
-	  if (minutesSunUp > totalMinutes) {
-		  clearInterval(t);
-		  
-	  } else if (minutesSunUp < 0) {
-		itBeNight();
-	  }
-	  else {
-	  itBeDay();
-	  const now = new Date(), left = (100 / totalMinutes) * minutesSunUp, bottom = left < 50 ? left * 2 : (100 - left) * 2;
-	  updateSun(sun, left, bottom, now);
-	  minutesLeft.innerText = totalMinutes - minutesSunUp;
-	  minutesSunUp++;
-	  }
-  }, 100);
   // Bekijk of de zon niet nog onder of reeds onder is
   // Anders kunnen we huidige waarden evalueren en de zon updaten via de updateSun functie.
   // PS.: vergeet weer niet om het resterend aantal minuten te updaten en verhoog het aantal verstreken minuten.
+  const t = setInterval(() => {
+    if (minutesSunUp > totalMinutes) {
+      clearInterval(t);
+      itBeNight();
+    } else if (minutesSunUp < 0) {
+      itBeNight();
+    } else {
+      itBeDay();
+      const now = new Date(),
+        left = (100 / totalMinutes) * minutesSunUp,
+        bottom = left < 50 ? left * 2 : (100 - left) * 2;
+      updateSun(sun, left, bottom, now);
+      minutesLeft.innerText = totalMinutes - minutesSunUp;
+      minutesSunUp++;
+    }
+  }, 6000);
 };
 
 // 3 Met de data van de API kunnen we de app opvullen
